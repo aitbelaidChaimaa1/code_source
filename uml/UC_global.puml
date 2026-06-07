@@ -1,0 +1,136 @@
+@startuml UC0_Global_BrainQuest
+!theme mars
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+skinparam ArrowColor #555555
+skinparam ActorBorderColor #2D6CDF
+skinparam UsecaseBorderColor #2D6CDF
+skinparam UsecaseBackgroundColor #EEF4FF
+skinparam PackageBorderColor #AAAAAA
+skinparam PackageBackgroundColor #F9F9F9
+skinparam wrapWidth 220
+skinparam defaultFontSize 13
+skinparam usecaseFontSize 13
+skinparam actorFontSize 13
+skinparam packageFontSize 14
+
+left to right direction
+
+title Diagramme des Cas d'Utilisation — BrainQuest (Vue Globale)
+
+' ── Acteur GAUCHE ──
+actor "Étudiant" as ETU
+
+rectangle "BrainQuest" {
+
+  package "1 - Authentification" {
+    usecase "S'inscrire"               as UC_REG
+    usecase "Choisir module de départ" as UC_CHOIX
+    usecase "Se connecter"             as UC_LOG
+  }
+
+  package "2 - Hub Central" {
+    usecase "Accéder au Hub Central"     as UC_HUB
+    usecase "Changer de module"          as UC_CHANGE
+    usecase "Voir progression par module" as UC_PROG
+  }
+
+  package "3 - Module SQL" {
+    usecase "Accéder à la carte monde SQL"   as UC_MAP_SQL
+    usecase "Passer test de positionnement"  as UC_TEST
+    usecase "Lancer une mission SQL"         as UC_MISS_SQL
+    usecase "Écrire et exécuter une requête" as UC_SQL
+    usecase "Demander un indice"             as UC_HINT
+  }
+
+  package "4 - Gamification" {
+    usecase "Gagner des XP et monter de niveau" as UC_XP
+    usecase "Débloquer un badge"                as UC_BADGE
+    usecase "Consulter le classement"           as UC_RANK
+    usecase "Maintenir un streak quotidien"     as UC_STREAK
+  }
+
+  package "5 - Suivi & Analyse" {
+    usecase "Consulter son dashboard"           as UC_DASH
+    usecase "Voir son profil"                   as UC_PROFIL
+    usecase "Voir la progression des étudiants" as UC_TEACHER
+    usecase "Exporter un rapport PDF"           as UC_PDF
+    usecase "Recevoir alerte inactivité"        as UC_ALERT
+  }
+
+  package "6 - Module Data Visualisation" {
+    usecase "Accéder à la carte monde DataViz" as UC_MAP_VIZ
+    usecase "Lancer une mission DataViz"        as UC_MISS_VIZ
+    usecase "Créer un graphique"                as UC_VIZ
+  }
+
+  package "7 - Module NoSQL" {
+    usecase "Accéder à la carte monde NoSQL" as UC_MAP_NOSQL
+    usecase "Lancer une mission MongoDB"     as UC_MISS_NOSQL
+    usecase "Exécuter une commande MongoDB"  as UC_MONGO
+  }
+
+  package "8 - Administration" {
+    usecase "Gérer les comptes"  as UC_ADM_ACC
+    usecase "Gérer les missions" as UC_ADM_MISS
+    usecase "Gérer les modules"  as UC_ADM_MOD
+  }
+
+}
+
+' ── Acteurs DROITE ──
+actor "Formateur"      as FOR
+actor "Administrateur" as ADM
+actor "IA (Claude)"    as IA #technology
+
+' ── Étudiant (gauche) ──
+ETU --> UC_REG
+ETU --> UC_LOG
+ETU --> UC_HUB
+ETU --> UC_MAP_SQL
+ETU --> UC_TEST
+ETU --> UC_MISS_SQL
+ETU --> UC_SQL
+ETU --> UC_HINT
+ETU --> UC_MAP_VIZ
+ETU --> UC_MISS_VIZ
+ETU --> UC_VIZ
+ETU --> UC_MAP_NOSQL
+ETU --> UC_MISS_NOSQL
+ETU --> UC_MONGO
+ETU --> UC_RANK
+ETU --> UC_DASH
+ETU --> UC_PROFIL
+
+' ── Formateur (droite) ──
+UC_LOG     --> FOR
+UC_TEACHER --> FOR
+UC_PDF     --> FOR
+UC_ALERT   --> FOR
+
+' ── Admin (droite) ──
+UC_LOG      --> ADM
+UC_ADM_ACC  --> ADM
+UC_ADM_MISS --> ADM
+UC_ADM_MOD  --> ADM
+
+' ── IA (droite) ──
+UC_HINT       --> IA
+UC_MISS_SQL   --> IA
+UC_MISS_VIZ   --> IA
+UC_MISS_NOSQL --> IA
+
+' ── Relations include/extend ──
+UC_REG    .> UC_CHOIX  : <<include>>
+UC_LOG    .> UC_HUB    : <<include>>
+UC_HUB    .> UC_CHANGE : <<extend>>
+UC_HUB    .> UC_PROG   : <<include>>
+UC_SQL    .> UC_XP     : <<include>>
+UC_VIZ    .> UC_XP     : <<include>>
+UC_MONGO  .> UC_XP     : <<include>>
+UC_XP     .> UC_BADGE  : <<extend>>
+UC_XP     .> UC_STREAK : <<extend>>
+UC_SQL    .> UC_HINT   : <<extend>>
+UC_MONGO  .> UC_HINT   : <<extend>>
+
+@enduml

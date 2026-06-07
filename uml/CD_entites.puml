@@ -1,0 +1,108 @@
+@startuml CD_Entites
+!theme mars
+skinparam classAttributeIconSize 0
+skinparam classFontSize 13
+skinparam attributeFontSize 12
+skinparam packageFontSize 14
+skinparam wrapWidth 200
+skinparam linetype ortho
+
+title Diagramme de Classes — Entités — BrainQuest
+
+package "Entités Utilisateur" {
+
+  class Utilisateur {
+    - id : int
+    - nom : String
+    - email : String
+    - mot_de_passe_hash : String
+    - xp : int
+    - niveau : int
+    - nb_requetes : int
+    - module_depart : String
+    - streak_count : int
+    - derniere_connexion : DateTime
+    - created_at : DateTime
+    --
+    + getNiveau() : Niveau
+    + ajouterXP(montant : int) : void
+    + getBadges() : List<Badge>
+    + mettreAJourStreak() : void
+  }
+
+  class Niveau {
+    - nom : String
+    - xp_min : int
+    - couleur : String
+    - icone : String
+    --
+    + getNiveauActuel(xp : int) : Niveau
+    + getProgression(xp : int) : float
+  }
+
+  class Badge {
+    - id : int
+    - nom : String
+    - description : String
+    - icone : String
+    - condition : String
+    --
+    + verifierCondition(stats : Map) : Boolean
+  }
+
+}
+
+package "Entités Apprentissage" {
+
+  class Mission {
+    - id : int
+    - user_id : int
+    - monde : int
+    - titre : String
+    - scenario : String
+    - question : String
+    - sql_attendu : String
+    - concept : String
+    - complete : Boolean
+    - created_at : DateTime
+    --
+    + valider(requete : String) : Boolean
+    + marquerComplete() : void
+  }
+
+  class Performance {
+    - id : int
+    - user_id : int
+    - concept : String
+    - reussi : Boolean
+    - requete : String
+    - monde : int
+    - created_at : DateTime
+  }
+
+  class Module {
+    - id : int
+    - nom : String
+    - description : String
+    - xp_requis : int
+    - actif : Boolean
+    --
+    + estDebloque(xp : int) : Boolean
+  }
+
+}
+
+' ── Relations ──
+Utilisateur "1" -- "*" Badge        : possède >
+(Utilisateur, Badge) .. UtilisateurBadge
+
+class UtilisateurBadge {
+  - obtenu_le : DateTime
+}
+
+Utilisateur "1" --> "*" Performance : génère
+Utilisateur "1" --> "*" Mission     : reçoit
+Utilisateur "*" --> "1" Niveau      : atteint
+Mission     "*" --> "1" Module      : appartient à
+
+@enduml

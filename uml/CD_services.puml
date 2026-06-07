@@ -1,0 +1,131 @@
+@startuml CD_Services
+!theme mars
+skinparam classAttributeIconSize 0
+skinparam classFontSize 13
+skinparam attributeFontSize 12
+skinparam packageFontSize 14
+skinparam wrapWidth 200
+skinparam linetype ortho
+
+title Diagramme de Classes — Services — BrainQuest
+
+package "Authentification & Navigation" {
+
+  class AuthService {
+    - SECRET_KEY : String
+    - ALGORITHME : String
+    - EXPIRATION : int
+    --
+    + inscrire(nom, email, mdp) : Token
+    + connecter(email, mdp) : Token
+    + verifierToken(token) : int
+    + hasherMotDePasse(mdp) : String
+  }
+
+  class HubCentralService {
+    --
+    + getModules(user_id) : List<Module>
+    + getProgressionParModule(user_id) : Map
+    + changerModule(user_id, module) : void
+  }
+
+}
+
+package "Éditeur SQL" {
+
+  class SQLEditorService {
+    --
+    + executerRequete(requete, user_id) : ResultSet
+    + listerTables() : List<String>
+  }
+
+  class SQLValidator <<utility>> {
+    - MOTS_INTERDITS : List<String>
+    --
+    + valider(requete : String) : Boolean
+    + detecterConcept(requete : String) : String
+  }
+
+}
+
+package "Gamification" {
+
+  class GamificationService {
+    --
+    + ajouterXP(user_id, requete) : Stats
+    + calculerXP(concept : String) : int
+    + verifierBadges(user_id, stats) : List<Badge>
+    + mettreAJourNiveau(user_id, xp) : Niveau
+    + mettreAJourStreak(user_id) : int
+  }
+
+  class LeaderboardService {
+    --
+    + getTop10() : List<Utilisateur>
+  }
+
+}
+
+package "Tuteur IA" {
+
+  class TuteurIAService {
+    - model : String
+    - max_tokens : int
+    --
+    + demanderIndice(requete, erreur, niveau) : String
+    + construirePrompt(requete, erreur, niveau) : String
+  }
+
+  class ClaudeClient {
+    - api_key : String
+    - model : String
+    --
+    + envoyer(prompt : String) : String
+  }
+
+}
+
+package "Adaptive Learning" {
+
+  class AdaptiveLearningService {
+    - CONCEPTS_MONDE : Map
+    --
+    + calculerScore(user_id, concept) : float
+    + mondeRecommande(user_id) : int
+    + enregistrerPerformance(user_id, concept, reussi) : void
+  }
+
+  class MissionService {
+    --
+    + genererMission(user_id, monde) : Mission
+    + validerMission(mission_id, requete) : Boolean
+    + comparerResultats(res1, res2) : Boolean
+  }
+
+}
+
+package "Analytics" {
+
+  class AnalyticsService {
+    --
+    + getStats(user_id) : DashboardStats
+    + getProgressionXP(user_id) : List
+    + getScoresConcepts(user_id) : Map
+    + getHeatmapActivite(user_id) : Map
+    + exporterRapportPDF(classe_id) : PDF
+  }
+
+}
+
+' ── Relations ──
+SQLEditorService    ..> SQLValidator           : valide via
+GamificationService ..> SQLValidator           : détecte concept via
+TuteurIAService     ..> ClaudeClient           : appelle
+MissionService      ..> ClaudeClient           : génère via
+MissionService      ..> AdaptiveLearningService : consulte
+GamificationService ..> AdaptiveLearningService : notifie
+AnalyticsService    ..> AdaptiveLearningService : lit scores
+HubCentralService   ..> AdaptiveLearningService : consulte progression
+AuthService         ..> HubCentralService      : redirige vers
+
+@enduml

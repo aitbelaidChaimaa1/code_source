@@ -1,0 +1,47 @@
+@startuml UC6_Administration
+!theme mars
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+skinparam ArrowColor #555555
+skinparam UsecaseBorderColor #2D6CDF
+skinparam UsecaseBackgroundColor #EEF4FF
+skinparam wrapWidth 200
+
+left to right direction
+
+title UC6 — Administration — BrainQuest
+
+actor "Administrateur" as ADM
+
+rectangle "Administration" {
+
+  package "Gestion des Comptes" {
+    usecase "Gérer les comptes"    as UC1
+    usecase "Créer un compte"      as UC2
+    usecase "Modifier un compte"   as UC3
+    usecase "Désactiver un compte" as UC4
+  }
+
+  package "Gestion des Missions" {
+    usecase "Voir les missions générées" as UC5
+    usecase "Supprimer une mission"      as UC6
+  }
+
+  package "Gestion des Modules" {
+    usecase "Activer un module"    as UC7
+    usecase "Désactiver un module" as UC8
+  }
+
+}
+
+ADM --> UC1
+ADM --> UC5
+ADM --> UC7
+
+UC1 .> UC2 : <<extend>>
+UC1 .> UC3 : <<extend>>
+UC1 .> UC4 : <<extend>>
+UC5 .> UC6 : <<extend>>
+UC7 .> UC8 : <<extend>>
+
+@enduml

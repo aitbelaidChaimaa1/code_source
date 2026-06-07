@@ -1,0 +1,50 @@
+@startuml UC3_Gamification
+!theme mars
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+skinparam ArrowColor #555555
+skinparam UsecaseBorderColor #2D6CDF
+skinparam UsecaseBackgroundColor #EEF4FF
+skinparam wrapWidth 200
+
+left to right direction
+
+title UC3 — Gamification — BrainQuest
+
+actor "Étudiant" as ETU
+
+rectangle "Gamification" {
+
+  package "Progression" {
+    usecase "Gagner des XP"               as UC1
+    usecase "Monter de niveau"            as UC2
+    usecase "Débloquer une nouvelle zone" as UC3
+  }
+
+  package "Récompenses" {
+    usecase "Débloquer un badge"                    as UC4
+    usecase "Voir une animation de récompense"      as UC5
+    usecase "Recevoir mission recommandée par l'IA" as UC6
+  }
+
+  package "Social & Suivi" {
+    usecase "Maintenir un streak quotidien"    as UC7
+    usecase "Consulter le classement (top 10)" as UC8
+    usecase "Consulter son profil et badges"   as UC9
+  }
+
+}
+
+ETU --> UC1
+ETU --> UC7
+ETU --> UC8
+ETU --> UC9
+
+UC1 .> UC2 : <<extend>>
+UC1 .> UC4 : <<extend>>
+UC1 .> UC6 : <<extend>>
+UC2 .> UC5 : <<include>>
+UC2 .> UC3 : <<extend>>
+UC4 .> UC5 : <<include>>
+
+@enduml

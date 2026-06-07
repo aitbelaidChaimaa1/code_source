@@ -1,0 +1,49 @@
+@startuml UC4_Dashboard_Formateur
+!theme mars
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+skinparam ArrowColor #555555
+skinparam UsecaseBorderColor #2D6CDF
+skinparam UsecaseBackgroundColor #EEF4FF
+skinparam wrapWidth 200
+
+left to right direction
+
+title UC4 — Dashboard & Interface Formateur — BrainQuest
+
+actor "Étudiant"  as ETU
+actor "Formateur" as FOR
+
+rectangle "Suivi & Analyse" {
+
+  package "Dashboard Étudiant" {
+    usecase "Consulter son dashboard"                as UC1
+    usecase "Voir courbe XP dans le temps"           as UC2
+    usecase "Voir radar des compétences SQL"         as UC3
+    usecase "Voir score de maîtrise par concept SQL" as UC4
+    usecase "Voir heatmap d'activité"                as UC5
+    usecase "Voir camembert missions réussies"       as UC6
+  }
+
+  package "Interface Formateur" {
+    usecase "Voir progression de la classe"              as UC7
+    usecase "Identifier les concepts faibles"            as UC8
+    usecase "Exporter rapport PDF"                       as UC9
+    usecase "Recevoir alerte étudiant inactif (+7 jours)" as UC10
+  }
+
+}
+
+ETU --> UC1
+UC1 .> UC2  : <<include>>
+UC1 .> UC3  : <<include>>
+UC1 .> UC4  : <<include>>
+UC1 .> UC5  : <<include>>
+UC1 .> UC6  : <<include>>
+
+FOR --> UC7
+FOR --> UC9
+FOR --> UC10
+UC7 .> UC8  : <<include>>
+
+@enduml

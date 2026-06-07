@@ -1,0 +1,57 @@
+@startuml UC5_Module_DataViz
+!theme mars
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+skinparam ArrowColor #555555
+skinparam UsecaseBorderColor #2D6CDF
+skinparam UsecaseBackgroundColor #EEF4FF
+skinparam wrapWidth 200
+
+left to right direction
+
+title UC5 — Module Data Visualisation — BrainQuest
+
+actor "Étudiant"    as ETU
+actor "IA (Claude)" as IA #technology
+
+rectangle "Module Data Visualisation" {
+
+  package "Navigation" {
+    usecase "Accéder à la carte monde DataViz" as UC1
+    usecase "Lancer une mission DataViz"        as UC2
+    usecase "Lire le scénario de mission"       as UC3
+  }
+
+  package "Création Graphique" {
+    usecase "Écrire une requête SQL"               as UC4
+    usecase "Choisir un type de graphique"         as UC5
+    usecase "Configurer les axes (X, Y, couleur)"  as UC6
+    usecase "Voir le rendu Chart.js en temps réel" as UC7
+  }
+
+  package "Validation & Récompense" {
+    usecase "Valider la mission" as UC8
+    usecase "Gagner des XP"      as UC9
+  }
+
+  package "Intelligence Artificielle" {
+    usecase "Générer une mission DataViz via IA" as UC10
+  }
+
+}
+
+ETU --> UC1
+ETU --> UC4
+ETU --> UC5
+IA  --> UC10
+
+UC1 .> UC2  : <<include>>
+UC2 .> UC3  : <<include>>
+UC2 .> UC10 : <<include>>
+UC4 .> UC6  : <<include>>
+UC5 .> UC6  : <<include>>
+UC6 .> UC7  : <<include>>
+UC7 .> UC8  : <<extend>>
+UC8 .> UC9  : <<include>>
+
+@enduml
